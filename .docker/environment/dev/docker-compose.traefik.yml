@@ -1,0 +1,48 @@
+version: '3.0'
+services:
+    database:
+        labels:
+            - traefik.enable=false
+
+    web:
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.gwennaeljean_https.tls=true
+            - traefik.http.routers.gwennaeljean_https.rule=Host(`gwennael-jean.local`)
+            - traefik.http.routers.gwennaeljean_https.entryPoints=websecure
+            - traefik.http.routers.gwennaeljean_http.rule=Host(`gwennael-jean.local`)
+            - traefik.http.routers.gwennaeljean_http.entryPoints=web
+        depends_on:
+            - database
+            - smtp
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        depends_on:
+            - database
+        environment:
+            - PMA_HOST=database
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.gwennaeljean_phpmyadmin.rule=Host(`phpmyadmin.gwennael-jean.local`)
+            - traefik.http.routers.gwennaeljean_phpmyadmin.entryPoints=web
+
+    smtp:
+        image: djfarrelly/maildev:0.13.4
+        restart: always
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.gwennaeljean_maildev.rule=Host(`maildev.gwennael-jean.local`)
+            - traefik.http.routers.gwennaeljean_maildev.entryPoints=web
+            - traefik.http.services.gwennaeljean_maildev.loadbalancer.server.port=80
+    traefik:
+        image: traefik:v2.3
+        ports:
+            - 80:80
+            - 443:443
+            - 8080:8080
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - ./dockerfiles/traefik/traefik.yaml:/etc/traefik/traefik.yaml:ro
+            - ./dockerfiles/traefik/certs:/etc/certs/:ro
+            - ./dockerfiles/traefik/confs:/etc/traefik/confs/:ro
