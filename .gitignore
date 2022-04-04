@@ -1,0 +1,6 @@
+.idea
+.docker/dockerfiles/database/data/*
+.docker/dockerfiles/database/import/*
+node_modules
+vendor
+.env
