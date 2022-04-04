@@ -9,7 +9,8 @@
     ],
     "require": {
         "php": "^8.0",
-        "wordplate/framework": "^11.0"
+        "wordplate/framework": "^11.0",
+        "wpackagist-plugin/hide-updates": "^1.1"
     },
     "repositories": [
         {
@@ -33,7 +34,8 @@
     "extra": {
         "installer-paths": {
             "public/mu-plugins/{$name}": [
-                "type:wordpress-muplugin"
+                "type:wordpress-muplugin",
+                "wpackagist-plugin/hide-updates"
             ],
             "public/plugins/{$name}": [
                 "type:wordpress-plugin"
