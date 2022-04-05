@@ -9,6 +9,7 @@
     ],
     "require": {
         "php": "^8.0",
+        "fiskhandlarn/blade": "^0.6.1",
         "wordplate/framework": "^11.0",
         "wpackagist-plugin/hide-updates": "^1.1"
     },
